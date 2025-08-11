@@ -432,6 +432,7 @@ MAKE_COMMS(Bottle)
 %include <yarp/dev/MultipleAnalogSensorsInterfaces.h>
 %include <yarp/dev/IRGBDSensor.h>
 %include <yarp/dev/IFrameTransform.h>
+%include <yarp/dev/IJointCoupling.h>
 
 %template(DVector) std::vector<double>;
 %template(BVector) std::vector<bool>;
@@ -825,6 +826,7 @@ typedef yarp::os::BufferedPort<ImageRgbFloat> BufferedPortImageRgbFloat;
     CAST_POLYDRIVER_TO_INTERFACE(ILLM)
     CAST_POLYDRIVER_TO_INTERFACE(IFrameTransform)
     CAST_POLYDRIVER_TO_INTERFACE(IRGBDSensor)
+    CAST_POLYDRIVER_TO_INTERFACE(IJointCoupling)
 
 // These views are currently disabled in SWIG + java generator since they are
 // useless without the EXTENDED_ANALOG_SENSOR_INTERFACE part.
@@ -1627,6 +1629,270 @@ typedef yarp::os::BufferedPort<ImageRgbFloat> BufferedPortImageRgbFloat;
     bool getTransform(const std::string& src, const std::string dest, yarp::sig::Matrix mat){
         bool ok = self->getTransform(src, dest, mat);
         return ok;
+    }
+}
+
+%extend yarp::dev::IJointCoupling {
+    bool convertFromPhysicalJointsToActuatedAxesPos(std::vector<double>& physJointsPos, std::vector<double>& actAxesPos) {
+        yarp::sig::Vector physJointsPosVec(physJointsPos.size());
+        yarp::sig::Vector actAxesPosVec(actAxesPos.size());
+        
+        for (size_t i = 0; i < physJointsPos.size(); i++) {
+            physJointsPosVec[i] = physJointsPos[i];
+        }
+        
+        bool result = self->convertFromPhysicalJointsToActuatedAxesPos(physJointsPosVec, actAxesPosVec);
+        
+        if (result) {
+            actAxesPos.resize(actAxesPosVec.size());
+            for (size_t i = 0; i < actAxesPosVec.size(); i++) {
+                actAxesPos[i] = actAxesPosVec[i];
+            }
+        }
+        
+        return result;
+    }
+
+    bool convertFromPhysicalJointsToActuatedAxesVel(std::vector<double>& physJointsPos, std::vector<double>& physJointsVel, std::vector<double>& actAxesVel) {
+        yarp::sig::Vector physJointsPosVec(physJointsPos.size());
+        yarp::sig::Vector physJointsVelVec(physJointsVel.size());
+        yarp::sig::Vector actAxesVelVec(actAxesVel.size());
+        
+        for (size_t i = 0; i < physJointsPos.size(); i++) {
+            physJointsPosVec[i] = physJointsPos[i];
+        }
+        for (size_t i = 0; i < physJointsVel.size(); i++) {
+            physJointsVelVec[i] = physJointsVel[i];
+        }
+        
+        bool result = self->convertFromPhysicalJointsToActuatedAxesVel(physJointsPosVec, physJointsVelVec, actAxesVelVec);
+        
+        if (result) {
+            actAxesVel.resize(actAxesVelVec.size());
+            for (size_t i = 0; i < actAxesVelVec.size(); i++) {
+                actAxesVel[i] = actAxesVelVec[i];
+            }
+        }
+        
+        return result;
+    }
+
+    bool convertFromPhysicalJointsToActuatedAxesAcc(std::vector<double>& physJointsPos, std::vector<double>& physJointsVel, std::vector<double>& physJointsAcc, std::vector<double>& actAxesAcc) {
+        yarp::sig::Vector physJointsPosVec(physJointsPos.size());
+        yarp::sig::Vector physJointsVelVec(physJointsVel.size());
+        yarp::sig::Vector physJointsAccVec(physJointsAcc.size());
+        yarp::sig::Vector actAxesAccVec(actAxesAcc.size());
+        
+        for (size_t i = 0; i < physJointsPos.size(); i++) {
+            physJointsPosVec[i] = physJointsPos[i];
+        }
+        for (size_t i = 0; i < physJointsVel.size(); i++) {
+            physJointsVelVec[i] = physJointsVel[i];
+        }
+        for (size_t i = 0; i < physJointsAcc.size(); i++) {
+            physJointsAccVec[i] = physJointsAcc[i];
+        }
+        
+        bool result = self->convertFromPhysicalJointsToActuatedAxesAcc(physJointsPosVec, physJointsVelVec, physJointsAccVec, actAxesAccVec);
+        
+        if (result) {
+            actAxesAcc.resize(actAxesAccVec.size());
+            for (size_t i = 0; i < actAxesAccVec.size(); i++) {
+                actAxesAcc[i] = actAxesAccVec[i];
+            }
+        }
+        
+        return result;
+    }
+
+    bool convertFromPhysicalJointsToActuatedAxesTrq(std::vector<double>& physJointsPos, std::vector<double>& physJointsTrq, std::vector<double>& actAxesTrq) {
+        yarp::sig::Vector physJointsPosVec(physJointsPos.size());
+        yarp::sig::Vector physJointsTrqVec(physJointsTrq.size());
+        yarp::sig::Vector actAxesTrqVec(actAxesTrq.size());
+        
+        for (size_t i = 0; i < physJointsPos.size(); i++) {
+            physJointsPosVec[i] = physJointsPos[i];
+        }
+        for (size_t i = 0; i < physJointsTrq.size(); i++) {
+            physJointsTrqVec[i] = physJointsTrq[i];
+        }
+        
+        bool result = self->convertFromPhysicalJointsToActuatedAxesTrq(physJointsPosVec, physJointsTrqVec, actAxesTrqVec);
+        
+        if (result) {
+            actAxesTrq.resize(actAxesTrqVec.size());
+            for (size_t i = 0; i < actAxesTrqVec.size(); i++) {
+                actAxesTrq[i] = actAxesTrqVec[i];
+            }
+        }
+        
+        return result;
+    }
+
+    bool convertFromActuatedAxesToPhysicalJointsPos(std::vector<double>& actAxesPos, std::vector<double>& physJointsPos) {
+        yarp::sig::Vector actAxesPosVec(actAxesPos.size());
+        yarp::sig::Vector physJointsPosVec(physJointsPos.size());
+        
+        for (size_t i = 0; i < actAxesPos.size(); i++) {
+            actAxesPosVec[i] = actAxesPos[i];
+        }
+        
+        bool result = self->convertFromActuatedAxesToPhysicalJointsPos(actAxesPosVec, physJointsPosVec);
+        
+        if (result) {
+            physJointsPos.resize(physJointsPosVec.size());
+            for (size_t i = 0; i < physJointsPosVec.size(); i++) {
+                physJointsPos[i] = physJointsPosVec[i];
+            }
+        }
+        
+        return result;
+    }
+
+    bool convertFromActuatedAxesToPhysicalJointsVel(std::vector<double>& actAxesPos, std::vector<double>& actAxesVel, std::vector<double>& physJointsVel) {
+        yarp::sig::Vector actAxesPosVec(actAxesPos.size());
+        yarp::sig::Vector actAxesVelVec(actAxesVel.size());
+        yarp::sig::Vector physJointsVelVec(physJointsVel.size());
+        
+        for (size_t i = 0; i < actAxesPos.size(); i++) {
+            actAxesPosVec[i] = actAxesPos[i];
+        }
+        for (size_t i = 0; i < actAxesVel.size(); i++) {
+            actAxesVelVec[i] = actAxesVel[i];
+        }
+        
+        bool result = self->convertFromActuatedAxesToPhysicalJointsVel(actAxesPosVec, actAxesVelVec, physJointsVelVec);
+        
+        if (result) {
+            physJointsVel.resize(physJointsVelVec.size());
+            for (size_t i = 0; i < physJointsVelVec.size(); i++) {
+                physJointsVel[i] = physJointsVelVec[i];
+            }
+        }
+        
+        return result;
+    }
+
+    bool convertFromActuatedAxesToPhysicalJointsAcc(std::vector<double>& actAxesPos, std::vector<double>& actAxesVel, std::vector<double>& actAxesAcc, std::vector<double>& physJointsAcc) {
+        yarp::sig::Vector actAxesPosVec(actAxesPos.size());
+        yarp::sig::Vector actAxesVelVec(actAxesVel.size());
+        yarp::sig::Vector actAxesAccVec(actAxesAcc.size());
+        yarp::sig::Vector physJointsAccVec(physJointsAcc.size());
+        
+        for (size_t i = 0; i < actAxesPos.size(); i++) {
+            actAxesPosVec[i] = actAxesPos[i];
+        }
+        for (size_t i = 0; i < actAxesVel.size(); i++) {
+            actAxesVelVec[i] = actAxesVel[i];
+        }
+        for (size_t i = 0; i < actAxesAcc.size(); i++) {
+            actAxesAccVec[i] = actAxesAcc[i];
+        }
+        
+        bool result = self->convertFromActuatedAxesToPhysicalJointsAcc(actAxesPosVec, actAxesVelVec, actAxesAccVec, physJointsAccVec);
+        
+        if (result) {
+            physJointsAcc.resize(physJointsAccVec.size());
+            for (size_t i = 0; i < physJointsAccVec.size(); i++) {
+                physJointsAcc[i] = physJointsAccVec[i];
+            }
+        }
+        
+        return result;
+    }
+
+    bool convertFromActuatedAxesToPhysicalJointsTrq(std::vector<double>& actAxesPos, std::vector<double>& actAxesTrq, std::vector<double>& physJointsTrq) {
+        yarp::sig::Vector actAxesPosVec(actAxesPos.size());
+        yarp::sig::Vector actAxesTrqVec(actAxesTrq.size());
+        yarp::sig::Vector physJointsTrqVec(physJointsTrq.size());
+        
+        for (size_t i = 0; i < actAxesPos.size(); i++) {
+            actAxesPosVec[i] = actAxesPos[i];
+        }
+        for (size_t i = 0; i < actAxesTrq.size(); i++) {
+            actAxesTrqVec[i] = actAxesTrq[i];
+        }
+        
+        bool result = self->convertFromActuatedAxesToPhysicalJointsTrq(actAxesPosVec, actAxesTrqVec, physJointsTrqVec);
+        
+        if (result) {
+            physJointsTrq.resize(physJointsTrqVec.size());
+            for (size_t i = 0; i < physJointsTrqVec.size(); i++) {
+                physJointsTrq[i] = physJointsTrqVec[i];
+            }
+        }
+        
+        return result;
+    }
+
+    size_t getNrOfPhysicalJoints() {
+        size_t nrOfPhysicalJoints;
+        bool ok = self->getNrOfPhysicalJoints(nrOfPhysicalJoints);
+        if (!ok) return 0;
+        return nrOfPhysicalJoints;
+    }
+
+    size_t getNrOfActuatedAxes() {
+        size_t nrOfActuatedAxes;
+        bool ok = self->getNrOfActuatedAxes(nrOfActuatedAxes);
+        if (!ok) return 0;
+        return nrOfActuatedAxes;
+    }
+
+    bool getCoupledPhysicalJoints(std::vector<size_t>& coupPhysJointsIndexes) {
+        yarp::sig::VectorOf<size_t> coupPhysJointsIndexesVec;
+        bool result = self->getCoupledPhysicalJoints(coupPhysJointsIndexesVec);
+        
+        if (result) {
+            coupPhysJointsIndexes.resize(coupPhysJointsIndexesVec.size());
+            for (size_t i = 0; i < coupPhysJointsIndexesVec.size(); i++) {
+                coupPhysJointsIndexes[i] = coupPhysJointsIndexesVec[i];
+            }
+        }
+        
+        return result;
+    }
+
+    bool getCoupledActuatedAxes(std::vector<size_t>& coupActAxesIndexes) {
+        yarp::sig::VectorOf<size_t> coupActAxesIndexesVec;
+        bool result = self->getCoupledActuatedAxes(coupActAxesIndexesVec);
+        
+        if (result) {
+            coupActAxesIndexes.resize(coupActAxesIndexesVec.size());
+            for (size_t i = 0; i < coupActAxesIndexesVec.size(); i++) {
+                coupActAxesIndexes[i] = coupActAxesIndexesVec[i];
+            }
+        }
+        
+        return result;
+    }
+
+    std::string getActuatedAxisName(size_t actuatedAxisIndex) {
+        std::string actuatedAxisName;
+        bool ok = self->getActuatedAxisName(actuatedAxisIndex, actuatedAxisName);
+        if (!ok) return "unknown";
+        return actuatedAxisName;
+    }
+
+    std::string getPhysicalJointName(size_t physicalJointIndex) {
+        std::string physicalJointName;
+        bool ok = self->getPhysicalJointName(physicalJointIndex, physicalJointName);
+        if (!ok) return "unknown";
+        return physicalJointName;
+    }
+
+    bool getPhysicalJointLimits(size_t physicalJointIndex, std::vector<double>& min, std::vector<double>& max) {
+        double minVal, maxVal;
+        bool result = self->getPhysicalJointLimits(physicalJointIndex, minVal, maxVal);
+        
+        if (result) {
+            min.resize(1);
+            max.resize(1);
+            min[0] = minVal;
+            max[0] = maxVal;
+        }
+        
+        return result;
     }
 }
 
