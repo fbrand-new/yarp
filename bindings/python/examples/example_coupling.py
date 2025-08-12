@@ -131,6 +131,7 @@ def main():
         driver.close()
         return
 
+    print('Opened the ergoCub hand coupling device successfully!')
     # Display coupling information
     print(f"Number of physical joints: {ijc.getNrOfPhysicalJoints()}")
     print(f"Number of actuated axes: {ijc.getNrOfActuatedAxes()}")
@@ -148,12 +149,18 @@ def main():
 
     # Example coupling conversion
     print("\nTesting coupling conversion...")
-    phys_joints = [10.0, 20.0, 30.0, 5.0, 15.0, 25.0, 35.0, 45.0, 20.0, 30.0, 25.0, 35.0]  # example positions
-    act_axes = [0.0] * ijc.getNrOfActuatedAxes()
+    # Create YARP Vector objects instead of Python lists
+    phys_joints = yarp.Vector(12)
+    act_axes = yarp.Vector(ijc.getNrOfActuatedAxes())
+    
+    # Fill with example positions
+    example_positions = [10.0, 20.0, 30.0, 5.0, 15.0, 25.0, 35.0, 45.0, 20.0, 30.0, 25.0, 35.0]
+    for i, pos in enumerate(example_positions):
+        phys_joints.set(i, pos)
     
     if ijc.convertFromPhysicalJointsToActuatedAxesPos(phys_joints, act_axes):
-        print(f"Physical joints: {phys_joints}")
-        print(f"Actuated axes: {act_axes}")
+        print(f"Physical joints: {[phys_joints.get(i) for i in range(phys_joints.size())]}")
+        print(f"Actuated axes: {[act_axes.get(i) for i in range(act_axes.size())]}")
     else:
         print("Conversion failed!")
 
