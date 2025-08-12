@@ -135,7 +135,8 @@ def main():
     # Display coupling information
     print(f"Number of physical joints: {ijc.getNrOfPhysicalJoints()}")
     print(f"Number of actuated axes: {ijc.getNrOfActuatedAxes()}")
-    
+
+
     # Get joint names
     print("\nPhysical joint names:")
     for i in range(ijc.getNrOfPhysicalJoints()):

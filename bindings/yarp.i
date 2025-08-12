@@ -1633,7 +1633,38 @@ typedef yarp::os::BufferedPort<ImageRgbFloat> BufferedPortImageRgbFloat;
     }
 }
 
-// %extend yarp::dev::IJointCoupling {
+%extend yarp::dev::IJointCoupling {
+
+
+    size_t getNrOfPhysicalJoints() {
+        size_t nrOfPhysicalJoints;
+        bool ok = self->getNrOfPhysicalJoints(nrOfPhysicalJoints);
+        if (!ok) return 0;
+        return nrOfPhysicalJoints;
+    }
+
+    size_t getNrOfActuatedAxes() {
+        size_t nrOfActuatedAxes;
+        bool ok = self->getNrOfActuatedAxes(nrOfActuatedAxes);
+        if (!ok) return 0;
+        return nrOfActuatedAxes;
+    }
+
+    std::string getActuatedAxisName(size_t actuatedAxisIndex) {
+        std::string actuatedAxisName;
+        bool ok = self->getActuatedAxisName(actuatedAxisIndex, actuatedAxisName);
+        if (!ok) return "unknown";
+        return actuatedAxisName;
+    }
+
+    std::string getPhysicalJointName(size_t physicalJointIndex) {
+        std::string physicalJointName;
+        bool ok = self->getPhysicalJointName(physicalJointIndex, physicalJointName);
+        if (!ok) return "unknown";
+        return physicalJointName;
+    }
+}
+
 //     bool convertFromPhysicalJointsToActuatedAxesPos(std::vector<double>& physJointsPos, std::vector<double>& actAxesPos) {
 //         yarp::sig::Vector physJointsPosVec(physJointsPos.size());
 //         yarp::sig::Vector actAxesPosVec(actAxesPos.size());
@@ -1826,19 +1857,6 @@ typedef yarp::os::BufferedPort<ImageRgbFloat> BufferedPortImageRgbFloat;
 //         return result;
 //     }
 
-//     size_t getNrOfPhysicalJoints() {
-//         size_t nrOfPhysicalJoints;
-//         bool ok = self->getNrOfPhysicalJoints(nrOfPhysicalJoints);
-//         if (!ok) return 0;
-//         return nrOfPhysicalJoints;
-//     }
-
-//     size_t getNrOfActuatedAxes() {
-//         size_t nrOfActuatedAxes;
-//         bool ok = self->getNrOfActuatedAxes(nrOfActuatedAxes);
-//         if (!ok) return 0;
-//         return nrOfActuatedAxes;
-//     }
 
 //     bool getCoupledPhysicalJoints(std::vector<size_t>& coupPhysJointsIndexes) {
 //         yarp::sig::VectorOf<size_t> coupPhysJointsIndexesVec;
